@@ -23,6 +23,11 @@ import (
 
 // HTTPApplicationDataInfluenceDataInfluenceIdDelete - Delete an individual Influence Data resource
 func HTTPApplicationDataInfluenceDataInfluenceIdDelete(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	// New HTTP request
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["influenceId"] = c.Params.ByName("influenceId")
@@ -57,6 +62,11 @@ func HTTPApplicationDataInfluenceDataInfluenceIdPatch(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataInfluenceIdPut - Create or update an individual Influence Data resource
 func HTTPApplicationDataInfluenceDataInfluenceIdPut(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	// Get HTTP request body
 	requestBody, err := c.GetRawData()
 	if err != nil {

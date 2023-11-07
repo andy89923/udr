@@ -23,6 +23,11 @@ import (
 
 // HTTPGetppData - Read the profile of a given UE
 func HTTPGetppData(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 

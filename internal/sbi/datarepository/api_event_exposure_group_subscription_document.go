@@ -23,6 +23,11 @@ import (
 
 // HTTPRemoveEeGroupSubscriptions - Deletes a eeSubscription for a group of UEs or any UE
 func HTTPRemoveEeGroupSubscriptions(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueGroupId"] = c.Params.ByName("ueGroupId")
 	req.Params["subsId"] = c.Params.ByName("subsId")
@@ -45,6 +50,11 @@ func HTTPRemoveEeGroupSubscriptions(c *gin.Context) {
 
 // HTTPUpdateEeGroupSubscriptions - Stores an individual ee subscription of a group of UEs or any UE
 func HTTPUpdateEeGroupSubscriptions(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	var eeSubscription models.EeSubscription
 
 	requestBody, err := c.GetRawData()

@@ -23,6 +23,11 @@ import (
 
 // HTTPApplicationDataInfluenceDataSubsToNotifyGet -
 func HTTPApplicationDataInfluenceDataSubsToNotifyGet(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	// New HTTP request
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Query["dnn"] = c.QueryArray("dnn")
@@ -50,6 +55,11 @@ func HTTPApplicationDataInfluenceDataSubsToNotifyGet(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataSubsToNotifyPost -
 func HTTPApplicationDataInfluenceDataSubsToNotifyPost(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	// Get HTTP request body
 	requestBody, err := c.GetRawData()
 	if err != nil {

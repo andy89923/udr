@@ -23,6 +23,11 @@ import (
 
 // HTTPGetSharedData - retrieve shared data
 func HTTPGetSharedData(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	sharedDataIdArray := c.QueryArray("shared-data-ids")
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Query["sharedDataIds"] = sharedDataIdArray

@@ -15,6 +15,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/free5gc/openapi"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/pkg/factory"
 	logger_util "github.com/free5gc/util/logger"
@@ -30,6 +31,23 @@ type Route struct {
 	Pattern string
 	// HandlerFunc is the handler function of this route.
 	HandlerFunc gin.HandlerFunc
+}
+
+func authorizationCheck(c *gin.Context) error {
+	if factory.UdrConfig.GetOAuth() {
+		oauth_err := openapi.VerifyOAuth(c.Request.Header.Get("Authorization"), "nudr-dr",
+			factory.UdrConfig.GetNrfCertPemPath())
+		if oauth_err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+			return oauth_err
+		}
+	}
+	allowNf_err := factory.UdrConfig.VerifyServiceAllowType(c.Request.Header.Get("requestNF"), "nudr-dr")
+	if allowNf_err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": allowNf_err.Error()})
+		return allowNf_err
+	}
+	return nil
 }
 
 // Routes is the list of the generated Route.
@@ -199,6 +217,11 @@ func Index(c *gin.Context) {
 
 // HandleAppDataInfluDataSubsToNotifyConflictDelete filters invalid requested resource on subs-to-notify DELETE
 func HandleAppDataInfluDataSubsToNotifyConflictDelete(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	influenceId := c.Param("influenceId")
 	if influenceId == "subs-to-notify" {
 		HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdDelete(c)
@@ -209,6 +232,11 @@ func HandleAppDataInfluDataSubsToNotifyConflictDelete(c *gin.Context) {
 
 // HandleAppDataInfluDataSubsToNotifyConflictGet filters invalid requested resource on subs-to-notify GET
 func HandleAppDataInfluDataSubsToNotifyConflictGet(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	influenceId := c.Param("influenceId")
 	if influenceId == "subs-to-notify" {
 		HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdGet(c)
@@ -219,6 +247,11 @@ func HandleAppDataInfluDataSubsToNotifyConflictGet(c *gin.Context) {
 
 // HandleAppDataInfluDataSubsToNotifyConflictPut filters invalid requested resource on subs-to-notify PUT
 func HandleAppDataInfluDataSubsToNotifyConflictPut(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	influenceId := c.Param("influenceId")
 	if influenceId == "subs-to-notify" {
 		HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdPut(c)

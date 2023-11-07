@@ -8,7 +8,6 @@ import (
 	"golang.org/x/oauth2"
 
 	"github.com/free5gc/openapi"
-
 	"github.com/free5gc/openapi/Nnrf_AccessToken"
 	"github.com/free5gc/openapi/models"
 	udr_context "github.com/free5gc/udr/internal/context"

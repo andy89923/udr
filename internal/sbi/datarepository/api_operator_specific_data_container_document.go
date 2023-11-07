@@ -23,6 +23,11 @@ import (
 
 // HTTPAmfContext3gpp - To modify operator specific data of a UE
 func HTTPPatchOperSpecData(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	var patchItemArray []models.PatchItem
 
 	requestBody, err := c.GetRawData()
@@ -72,6 +77,11 @@ func HTTPPatchOperSpecData(c *gin.Context) {
 
 // HTTPQueryOperSpecData - Retrieves the operator specific data of a UE
 func HTTPQueryOperSpecData(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 

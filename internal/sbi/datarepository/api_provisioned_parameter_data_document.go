@@ -23,6 +23,11 @@ import (
 
 // HTTPModifyPpData - modify the provisioned parameter data
 func HTTPModifyPpData(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	var patchItemArray []models.PatchItem
 
 	requestBody, err := c.GetRawData()

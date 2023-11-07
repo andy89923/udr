@@ -23,6 +23,11 @@ import (
 
 // HTTPPostSubscriptionDataSubscriptions - Subscription data subscriptions
 func HTTPPostSubscriptionDataSubscriptions(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	var subscriptionDataSubscriptions models.SubscriptionDataSubscriptions
 
 	requestBody, err := c.GetRawData()

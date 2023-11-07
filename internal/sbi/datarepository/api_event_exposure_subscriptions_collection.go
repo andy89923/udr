@@ -23,6 +23,11 @@ import (
 
 // HTTPCreateEeSubscriptions - Create individual EE subscription
 func HTTPCreateEeSubscriptions(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	var eeSubscription models.EeSubscription
 
 	requestBody, err := c.GetRawData()
@@ -72,6 +77,11 @@ func HTTPCreateEeSubscriptions(c *gin.Context) {
 
 // HTTPQueryeesubscriptions - Retrieves the ee subscriptions of a UE
 func HTTPQueryeesubscriptions(c *gin.Context) {
+	auth_err := authorizationCheck(c)
+	if auth_err != nil {
+		return
+	}
+
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueGroupId"] = c.Params.ByName("ueGroupId")
 
