@@ -4,21 +4,24 @@ import (
 	"context"
 	"time"
 
+	"github.com/antihax/optional"
+	"golang.org/x/oauth2"
+
+	"github.com/free5gc/openapi"
+
+	"github.com/free5gc/openapi/Nnrf_AccessToken"
+	"github.com/free5gc/openapi/models"
 	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/pkg/factory"
-
-	"github.com/free5gc/openapi"
-	"github.com/free5gc/openapi/Nnrf_AccessToken"
-	"github.com/free5gc/openapi/models"
-
-	"github.com/antihax/optional"
-	"golang.org/x/oauth2"
 )
 
 func GetTokenCtx(scope, targetNF string) (context.Context, *models.ProblemDetails, error) {
 	if factory.UdrConfig.GetOAuth() {
 		tok, pd, err := sendAccTokenReq(scope, targetNF)
+		// udrSelf := udr_context.GetSelf()
+		// tok, pd, err := util.SendAccTokenReq
+		//   (udrSelf.NfId, models.NfType_UDR, &udrSelf.TokenMap, &udrSelf.ClientMap, scope, targetNF, udrSelf.NrfUri)
 		if err != nil {
 			return nil, pd, err
 		}
@@ -80,6 +83,7 @@ func sendAccTokenReq(scope, targetNF string) (oauth2.TokenSource, *models.Proble
 			return nil, nil, err
 		}
 		problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+		// problem := err.(openapi.GenericOpenAPIError).Model().(models.AccessTokenErr)
 		return nil, &problem, err
 	} else {
 		return nil, nil, openapi.ReportError("server no response")
